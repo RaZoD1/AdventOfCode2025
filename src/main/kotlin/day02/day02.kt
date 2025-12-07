@@ -12,7 +12,22 @@ data class Range(val min: Long, val max: Long) {
             else
                 if (str.take(str.length / 2) == str.takeLast(str.length / 2)) true
                 else false
-        }.map { it.toLong() }
+        }
+    }
+
+    fun getInvalidIds2(): List<Long> {
+        return (min..max).filter {
+            val str = it.toString()
+            val len = str.length
+
+            (1..(len / 2)).any { patternLen ->
+                if (len % patternLen != 0) return@any false
+                val times = len / patternLen;
+                val pattern = str.take(patternLen)
+
+                pattern.repeat(times) == str
+            }
+        }
     }
 }
 
@@ -21,7 +36,7 @@ fun solveLevel1(turns: List<Range>): Long {
 }
 
 fun solveLevel2(turns: List<Range>): Long {
-    return -1
+    return turns.sumOf { range -> range.getInvalidIds2().sum() }
 }
 
 const val DAY = 2
