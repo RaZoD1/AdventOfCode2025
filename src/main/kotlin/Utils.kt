@@ -170,9 +170,9 @@ fun runLevels(day: Int, level1: (() -> Long), level2: (() -> Long)?, times: Int 
 
     println(
         "Part 1:   ${result1.first().value}\n" +
-            "   Initial run took\t${result1.first().duration}\n" +
-            "   Last (${times}) run took\t${result1.last().duration}\n" +
-            "   Average run took\t${result1.let { it.map { it.duration }.reduce { l, r -> l + r } / result1.size }}"
+                "   Initial run took\t${result1.first().duration}\n" +
+                "   Last (${times}) run took\t${result1.last().duration}\n" +
+                "   Average run took\t${result1.let { it.map { it.duration }.reduce { l, r -> l + r } / result1.size }}"
     )
     if (!result1.all { it.value == result1.first().value }) {
         println("WARNING: Not every run had the same result")
@@ -188,13 +188,13 @@ fun runLevels(day: Int, level1: (() -> Long), level2: (() -> Long)?, times: Int 
     if (result2 != null) {
         println(
             "Part 2:   ${result2.first().value}\n" +
-                "   Initial run took\t${result2.first().duration}\n" +
-                "   Last (${times}) run took\t${result2.last().duration}\n" +
-                "   Average run took\t${
-                    result2.let {
-                        it.map { it.duration }.reduce { l, r -> l + r } / result2.size
-                    }
-                }"
+                    "   Initial run took\t${result2.first().duration}\n" +
+                    "   Last (${times}) run took\t${result2.last().duration}\n" +
+                    "   Average run took\t${
+                        result2.let {
+                            it.map { it.duration }.reduce { l, r -> l + r } / result2.size
+                        }
+                    }"
         )
         if (!result2.all { it.value == result2.first().value }) {
             println("WARNING: Not every run had the same result")
@@ -224,7 +224,7 @@ fun findCharInGrid(grid: List<List<Char>>, char: Char): Vec2 {
     error("Couldn't find char '$char' in grid")
 }
 
-fun Grid.toMutableGrid(): MutableGrid = this.map{ it.toMutableList() }.toMutableList()
+fun Grid.toMutableGrid(): MutableGrid = this.map { it.toMutableList() }.toMutableList()
 
 fun Grid.inGrid(pos: Vec2): Boolean {
     if (pos.row in this.indices) {
@@ -238,4 +238,24 @@ fun Grid.at(pos: Vec2): Char {
     if (!this.inGrid(pos)) error("pos $pos outside of grid")
 
     return this[pos.row][pos.col]
+}
+
+fun Grid.forEach(action: (Vec2, Char) -> Unit) {
+    for ((rowIdx, row) in this.withIndex()) {
+        for ((colIdx, c) in row.withIndex()) {
+            action(Vec2(colIdx, rowIdx), c)
+        }
+    }
+}
+
+fun <R> Grid.map(action: (Vec2, Char) -> R): List<List<R>> {
+    val newGrid = mutableListOf<List<R>>()
+    for ((rowIdx, row) in this.withIndex()) {
+        val newRow = mutableListOf<R>()
+        for ((colIdx, c) in row.withIndex()) {
+            newRow += action(Vec2(colIdx, rowIdx), c)
+        }
+        newGrid += newRow.toList()
+    }
+    return newGrid.toList()
 }
