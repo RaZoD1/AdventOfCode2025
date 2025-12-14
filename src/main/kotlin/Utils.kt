@@ -3,6 +3,7 @@ import kotlin.io.path.readText
 import kotlin.math.*
 import kotlin.time.measureTimedValue
 
+
 fun getInput(day: Int, sample: Boolean = false, alternateFileName: String? = null): String {
     val dayString = if (day < 10) "0$day" else "$day"
     val filename = if (sample) "sample" else alternateFileName ?: "input"
@@ -69,6 +70,41 @@ data class Vec2(val col: Int, val row: Int) {
     fun manhattan(v: Vec2): Long {
         val d = this - v
         return abs(d.x) + abs(d.y).toLong()
+    }
+
+}
+
+data class Vec3(val x: Long, val y: Long, val z: Long) {
+    companion object {
+        val ZERO = Vec3(0, 0, 0)
+    }
+
+
+    operator fun plus(v: Vec3): Vec3 {
+        return Vec3(this.x + v.x, this.y + v.y, this.z + v.z)
+    }
+
+    operator fun minus(v: Vec3): Vec3 {
+        return Vec3(this.x - v.x, this.y - v.y, this.z - v.z)
+    }
+
+    operator fun times(scale: Int): Vec3 {
+        return Vec3(this.x * scale, this.y * scale, this.z * scale)
+    }
+
+    operator fun times(vec: Vec3): Vec3 {
+        return Vec3(this.x * vec.x, this.y * vec.y, this.z * vec.z)
+    }
+
+
+    fun manhattan(v: Vec3): Long {
+        val d = this - v
+        return abs(d.x) + abs(d.y) + abs(d.z)
+    }
+
+    fun euclidean(v: Vec3): Double {
+        val d = this - v
+        return sqrt((d.x * d.x + d.y * d.y + d.z * d.z).toDouble())
     }
 
 }
