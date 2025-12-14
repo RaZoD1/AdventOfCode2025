@@ -259,3 +259,18 @@ fun <R> Grid.map(action: (Vec2, Char) -> R): List<List<R>> {
     }
     return newGrid.toList()
 }
+
+fun <T> transposeMatrix(matrix: List<List<T>>): List<List<T>> {
+    if (matrix.isEmpty() || matrix[0].isEmpty()) {
+        return emptyList()
+    }
+
+    val numRows = matrix.size
+    val numCols = matrix[0].size
+
+    return (0 until numCols).map { colIndex ->
+        (0 until numRows).map { rowIndex ->
+            matrix[rowIndex][colIndex]
+        }
+    }
+}
