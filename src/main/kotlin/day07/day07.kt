@@ -31,7 +31,23 @@ fun solveLevel1(grid: Grid): Long {
 
 
 fun solveLevel2(grid: Grid): Long {
-    return -1;
+    // Map<ColumnIndex to AmountOfTimelines>
+    val beams = mutableMapOf<Int, Long>()
+    fun setOrAdd(key: Int, value: Long) {
+        beams[key] = (beams[key] ?: 0L) + value
+    }
+
+    for (row in grid) {
+        row.indexOf(START).let { if (it != -1) beams[it] = 1L }
+        beams.toMap().forEach { (index, timelines) ->
+            if (row[index] == SPLITTER) {
+                beams.remove(index)
+                setOrAdd(index - 1, timelines)
+                setOrAdd(index + 1, timelines)
+            }
+        }
+    }
+    return beams.values.sum()
 }
 
 const val DAY = 7
