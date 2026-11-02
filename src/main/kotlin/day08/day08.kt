@@ -39,7 +39,6 @@ fun solveLevel1(junctions: List<Vec3>): Long {
         .fold(1L) { acc, circ -> acc * circ.size }
 }
 
-
 fun solveLevel2(junctions: List<Vec3>): Long {
     val circuits = mutableSetOf<Set<Vec3>>()
     circuits.addAll(junctions.map { setOf(it) })
@@ -72,12 +71,13 @@ val PAIRS_TO_CONNECT = if (USE_SAMPLE) 10 else 1000
 
 fun main() {
     val text = getInput(DAY, USE_SAMPLE)
-    val junctions = text
-        .lines()
-        .filter(String::isNotBlank)
-        .map { line ->
-            val (x, y, z) = line.split(",").map(String::toLong)
-            Vec3(x, y, z)
-        }
+    val junctions =
+        text
+            .lines()
+            .filter(String::isNotBlank)
+            .map { line ->
+                val (x, y, z) = line.split(",").map(String::toLong)
+                Vec3(x, y, z)
+            }
     runLevels(DAY, { solveLevel1(junctions) }, { solveLevel2(junctions) })
 }

@@ -3,8 +3,11 @@ import kotlin.io.path.readText
 import kotlin.math.*
 import kotlin.time.measureTimedValue
 
-
-fun getInput(day: Int, sample: Boolean = false, alternateFileName: String? = null): String {
+fun getInput(
+    day: Int,
+    sample: Boolean = false,
+    alternateFileName: String? = null,
+): String {
     val dayString = if (day < 10) "0$day" else "$day"
     val filename = if (sample) "sample" else alternateFileName ?: "input"
 
@@ -13,8 +16,10 @@ fun getInput(day: Int, sample: Boolean = false, alternateFileName: String? = nul
 
 fun toRadians(degrees: Double): Double = degrees * PI / 180.0
 
-
-data class Vec2(val col: Int, val row: Int) {
+data class Vec2(
+    val col: Int,
+    val row: Int,
+) {
     companion object {
         val ZERO = Vec2(0, 0)
         val LEFT = Vec2(-1, 0)
@@ -30,72 +35,50 @@ data class Vec2(val col: Int, val row: Int) {
     val x = col
     val y = row
 
-    operator fun plus(v: Vec2): Vec2 {
-        return Vec2(this.col + v.col, this.row + v.row)
-    }
+    operator fun plus(v: Vec2): Vec2 = Vec2(this.col + v.col, this.row + v.row)
 
-    operator fun minus(v: Vec2): Vec2 {
-        return Vec2(this.col - v.col, this.row - v.row)
-    }
+    operator fun minus(v: Vec2): Vec2 = Vec2(this.col - v.col, this.row - v.row)
 
-    operator fun times(scale: Int): Vec2 {
-        return Vec2(this.col * scale, this.row * scale)
-    }
+    operator fun times(scale: Int): Vec2 = Vec2(this.col * scale, this.row * scale)
 
-    operator fun times(vec: Vec2): Vec2 {
-        return Vec2(this.col * vec.col, this.row * vec.row)
-    }
+    operator fun times(vec: Vec2): Vec2 = Vec2(this.col * vec.col, this.row * vec.row)
 
     fun rotate(degrees: Double): Vec2 {
-
         val radians = toRadians(degrees)
         return Vec2(
             row = (sin(radians) * col + cos(radians) * row).roundToInt(),
-            col = (cos(radians) * col - sin(radians) * row).roundToInt()
+            col = (cos(radians) * col - sin(radians) * row).roundToInt(),
         )
     }
 
-    fun turnRight(): Vec2 {
-        return this.rotate(90.0)
-    }
+    fun turnRight(): Vec2 = this.rotate(90.0)
 
-    fun turnLeft(): Vec2 {
-        return this.rotate(-90.0)
-    }
+    fun turnLeft(): Vec2 = this.rotate(-90.0)
 
-    fun turnAround(): Vec2 {
-        return this.rotate(180.0)
-    }
+    fun turnAround(): Vec2 = this.rotate(180.0)
 
     fun manhattan(v: Vec2): Long {
         val d = this - v
         return abs(d.x) + abs(d.y).toLong()
     }
-
 }
 
-data class Vec3(val x: Long, val y: Long, val z: Long) {
+data class Vec3(
+    val x: Long,
+    val y: Long,
+    val z: Long,
+) {
     companion object {
         val ZERO = Vec3(0, 0, 0)
     }
 
+    operator fun plus(v: Vec3): Vec3 = Vec3(this.x + v.x, this.y + v.y, this.z + v.z)
 
-    operator fun plus(v: Vec3): Vec3 {
-        return Vec3(this.x + v.x, this.y + v.y, this.z + v.z)
-    }
+    operator fun minus(v: Vec3): Vec3 = Vec3(this.x - v.x, this.y - v.y, this.z - v.z)
 
-    operator fun minus(v: Vec3): Vec3 {
-        return Vec3(this.x - v.x, this.y - v.y, this.z - v.z)
-    }
+    operator fun times(scale: Int): Vec3 = Vec3(this.x * scale, this.y * scale, this.z * scale)
 
-    operator fun times(scale: Int): Vec3 {
-        return Vec3(this.x * scale, this.y * scale, this.z * scale)
-    }
-
-    operator fun times(vec: Vec3): Vec3 {
-        return Vec3(this.x * vec.x, this.y * vec.y, this.z * vec.z)
-    }
-
+    operator fun times(vec: Vec3): Vec3 = Vec3(this.x * vec.x, this.y * vec.y, this.z * vec.z)
 
     fun manhattan(v: Vec3): Long {
         val d = this - v
@@ -106,11 +89,12 @@ data class Vec3(val x: Long, val y: Long, val z: Long) {
         val d = this - v
         return sqrt((d.x * d.x + d.y * d.y + d.z * d.z).toDouble())
     }
-
 }
 
-
-data class LVec2(val col: Long, val row: Long) {
+data class LVec2(
+    val col: Long,
+    val row: Long,
+) {
     companion object {
         val LEFT = LVec2(-1, 0)
         val RIGHT = LVec2(1, 0)
@@ -125,41 +109,31 @@ data class LVec2(val col: Long, val row: Long) {
     val x = col
     val y = row
 
-    operator fun plus(v: LVec2): LVec2 {
-        return LVec2(this.col + v.col, this.row + v.row)
-    }
+    operator fun plus(v: LVec2): LVec2 = LVec2(this.col + v.col, this.row + v.row)
 
-    operator fun minus(v: LVec2): LVec2 {
-        return LVec2(this.col - v.col, this.row - v.row)
-    }
+    operator fun minus(v: LVec2): LVec2 = LVec2(this.col - v.col, this.row - v.row)
 
-    operator fun times(scale: Long): LVec2 {
-        return LVec2(this.col * scale, this.row * scale)
-    }
+    operator fun times(scale: Long): LVec2 = LVec2(this.col * scale, this.row * scale)
 
     fun rotate(degrees: Double): LVec2 {
-
         val radians = toRadians(degrees)
         return LVec2(
             row = (sin(radians) * col + cos(radians) * row).roundToLong(),
-            col = (cos(radians) * col - sin(radians) * row).roundToLong()
+            col = (cos(radians) * col - sin(radians) * row).roundToLong(),
         )
     }
 
-    fun turnRight(): LVec2 {
-        return this.rotate(90.0)
-    }
+    fun turnRight(): LVec2 = this.rotate(90.0)
 
-    fun turnLeft(): LVec2 {
-        return this.rotate(-90.0)
-    }
+    fun turnLeft(): LVec2 = this.rotate(-90.0)
 
-    fun turnAround(): LVec2 {
-        return this.rotate(180.0)
-    }
+    fun turnAround(): LVec2 = this.rotate(180.0)
 }
 
-fun calculateLCM(a: Long, b: Long): Long {
+fun calculateLCM(
+    a: Long,
+    b: Long,
+): Long {
     if (a == 0L || b == 0L) {
         throw IllegalArgumentException("LCM is not defined for zero.")
     }
@@ -168,7 +142,10 @@ fun calculateLCM(a: Long, b: Long): Long {
 }
 
 // Helper function to calculate GCD using the Euclidean algorithm
-fun gcd(a: Long, b: Long): Long {
+fun gcd(
+    a: Long,
+    b: Long,
+): Long {
     var x = a
     var y = b
 
@@ -189,7 +166,6 @@ fun plotVec2s(positions: Iterable<Vec2>) {
         grid[position.row][position.col] = 'X'
     }
     println(grid.joinToString("\n") { it.joinToString("") })
-
 }
 
 fun getSolution(day: Int): Pair<Long?, Long?> {
@@ -198,7 +174,12 @@ fun getSolution(day: Int): Pair<Long?, Long?> {
     return Pair(answers.getOrNull(0), answers.getOrNull(1))
 }
 
-fun runLevels(day: Int, level1: (() -> Long), level2: (() -> Long)?, times: Int = 100) {
+fun runLevels(
+    day: Int,
+    level1: (() -> Long),
+    level2: (() -> Long)?,
+    times: Int = 100,
+) {
     val result1 = (0..<times).map { measureTimedValue(level1) }
     val result2 = if (level2 != null) (0..<times).map { measureTimedValue(level2) } else null
 
@@ -206,9 +187,9 @@ fun runLevels(day: Int, level1: (() -> Long), level2: (() -> Long)?, times: Int 
 
     println(
         "Part 1:   ${result1.first().value}\n" +
-                "   Initial run took\t${result1.first().duration}\n" +
-                "   Last (${times}) run took\t${result1.last().duration}\n" +
-                "   Average run took\t${result1.let { it.map { it.duration }.reduce { l, r -> l + r } / result1.size }}"
+            "   Initial run took\t${result1.first().duration}\n" +
+            "   Last ($times) run took\t${result1.last().duration}\n" +
+            "   Average run took\t${result1.let { it.map { it.duration }.reduce { l, r -> l + r } / result1.size }}",
     )
     if (!result1.all { it.value == result1.first().value }) {
         println("WARNING: Not every run had the same result")
@@ -224,13 +205,13 @@ fun runLevels(day: Int, level1: (() -> Long), level2: (() -> Long)?, times: Int 
     if (result2 != null) {
         println(
             "Part 2:   ${result2.first().value}\n" +
-                    "   Initial run took\t${result2.first().duration}\n" +
-                    "   Last (${times}) run took\t${result2.last().duration}\n" +
-                    "   Average run took\t${
-                        result2.let {
-                            it.map { it.duration }.reduce { l, r -> l + r } / result2.size
-                        }
-                    }"
+                "   Initial run took\t${result2.first().duration}\n" +
+                "   Last ($times) run took\t${result2.last().duration}\n" +
+                "   Average run took\t${
+                    result2.let {
+                        it.map { it.duration }.reduce { l, r -> l + r } / result2.size
+                    }
+                }",
         )
         if (!result2.all { it.value == result2.first().value }) {
             println("WARNING: Not every run had the same result")
@@ -242,16 +223,17 @@ fun runLevels(day: Int, level1: (() -> Long), level2: (() -> Long)?, times: Int 
             }
         }
     }
-
 }
 
 typealias Grid = List<List<Char>>
 typealias MutableGrid = MutableList<MutableList<Char>>
 
-fun parseGrid(text: String): Grid =
-    text.split("\n").filter { it.isNotEmpty() }.map { it.toList() }
+fun parseGrid(text: String): Grid = text.split("\n").filter { it.isNotEmpty() }.map { it.toList() }
 
-fun findCharInGrid(grid: List<List<Char>>, char: Char): Vec2 {
+fun findCharInGrid(
+    grid: List<List<Char>>,
+    char: Char,
+): Vec2 {
     for ((rowIdx, row) in grid.withIndex()) {
         for ((colIdx, c) in row.withIndex()) {
             if (c == char) return Vec2(colIdx, rowIdx)
@@ -264,8 +246,9 @@ fun Grid.toMutableGrid(): MutableGrid = this.map { it.toMutableList() }.toMutabl
 
 fun Grid.inGrid(pos: Vec2): Boolean {
     if (pos.row in this.indices) {
-        if (pos.col in this[pos.row].indices)
+        if (pos.col in this[pos.row].indices) {
             return true
+        }
     }
     return false
 }

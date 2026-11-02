@@ -29,11 +29,14 @@ fun solveLevel1(grid: Grid): Long {
     return splits
 }
 
-
 fun solveLevel2(grid: Grid): Long {
     // Map<ColumnIndex to AmountOfTimelines>
     val beams = mutableMapOf<Int, Long>()
-    fun setOrAdd(key: Int, value: Long) {
+
+    fun setOrAdd(
+        key: Int,
+        value: Long,
+    ) {
         beams[key] = (beams[key] ?: 0L) + value
     }
 
@@ -51,7 +54,6 @@ fun solveLevel2(grid: Grid): Long {
 }
 
 const val DAY = 7
-
 
 fun main() {
     val text = getInput(DAY)

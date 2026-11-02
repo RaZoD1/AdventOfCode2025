@@ -23,7 +23,10 @@ fun solveLevel1(tiles: List<LVec2>): Long {
     return maxArea
 }
 
-fun inArea(area: Pair<LVec2, LVec2>, target: LVec2): Boolean {
+fun inArea(
+    area: Pair<LVec2, LVec2>,
+    target: LVec2,
+): Boolean {
     val (corner1, corner2) = area
     val minX = minOf(corner1.x, corner2.x)
     val maxX = maxOf(corner1.x, corner2.x)
@@ -33,7 +36,10 @@ fun inArea(area: Pair<LVec2, LVec2>, target: LVec2): Boolean {
     return target.x in minX..maxX && target.y in minY..maxY
 }
 
-fun isValidRect(cornerIndices: Pair<Int, Int>, tiles: List<LVec2>): Boolean {
+fun isValidRect(
+    cornerIndices: Pair<Int, Int>,
+    tiles: List<LVec2>,
+): Boolean {
     val corner1 = tiles[cornerIndices.first]
     val corner2 = tiles[cornerIndices.second]
 
@@ -71,7 +77,6 @@ fun solveLevel2(tiles: List<LVec2>): Long {
                 println("new max $maxArea for $tile1 to $tile2")
                 maxArea = area
             }
-
         }
     }
     return maxArea
@@ -83,10 +88,13 @@ const val USE_SAMPLE = true
 fun main() {
     println((10..5).toList())
     val text = getInput(DAY, USE_SAMPLE)
-    val tiles = text.lines().filter { it.isNotBlank() }
-        .map { line ->
-            val (x, y) = line.split(",").map(String::toLong);
-            LVec2(x, y)
-        }
+    val tiles =
+        text
+            .lines()
+            .filter { it.isNotBlank() }
+            .map { line ->
+                val (x, y) = line.split(",").map(String::toLong)
+                LVec2(x, y)
+            }
     runLevels(DAY, { solveLevel1(tiles) }, { solveLevel2(tiles) }, 1)
 }
